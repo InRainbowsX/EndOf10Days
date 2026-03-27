@@ -1,0 +1,52 @@
+name: 测试 (手动触发)
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: "测试类型"
+        required: true
+        default: "all"
+        type: choice
+        options: [all, lint, test, build]
+
+env:
+  CI: "true"
+
+jobs:
+  lint:
+    if: inputs.test_type == 'all' || inputs.test_type == 'lint'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    if: inputs.test_type == 'all' || inputs.test_type == 'test'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
+  build:
+    if: inputs.test_type == 'all' || inputs.test_type == 'build'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+

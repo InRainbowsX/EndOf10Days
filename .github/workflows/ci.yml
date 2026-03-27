@@ -1,0 +1,98 @@
+name: 持续集成
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+env:
+  CI: "true"
+
+jobs:
+  pr-check:
+    name: PR 规范检查
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: 检查 PR 关联 Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { body, title } = context.payload.pull_request;
+            const issuePattern = /(?:close|closes|fix|fixes|resolve|resolves|#)\s*#(\d+)/i;
+            const hasIssueRef = issuePattern.test(body || '') || issuePattern.test(title || '');
+
+            if (!hasIssueRef) {
+              core.setFailed(
+                'PR 必须关联 Issue。\n请在标题或描述中添加 \"fix #123\"、\"close #123\" 或直接引用 #123。'
+              );
+            }
+
+  lint:
+    name: 代码检查
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    name: 测试
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
+  build:
+    name: 构建
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+  governance:
+    name: 仓库治理
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          for f in AGENTS.md docs/AGENTS.md memory/MEMORY.md memory/incidents.md memory/templates.md memory/development.md \
+                   Dockerfile docker-compose.yml docker-compose.test.yml .github/workflows/ci.yml \
+                   .github/workflows/test.yml .github/workflows/issue-workflow.yml scripts/run_checks.sh; do
+            [[ -f "$f" ]] || { echo "❌ 缺少: $f"; exit 1; }
+          done
+          echo "✅ 治理文件完整"
+
+  summary:
+    name: 汇总
+    runs-on: ubuntu-latest
+    needs: [pr-check, lint, test, build, governance]
+    if: always()
+    steps:
+      - run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            [[ "${{ needs.pr-check.result }}" == "success" ]] || exit 1
+          fi
+          [[ "${{ needs.lint.result }}" == "success" ]] || exit 1
+          [[ "${{ needs.test.result }}" == "success" ]] || exit 1
+          [[ "${{ needs.build.result }}" == "success" ]] || exit 1
+          [[ "${{ needs.governance.result }}" == "success" ]] || exit 1
+

@@ -1,0 +1,140 @@
+name: Issue 工作流
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+      - reopened
+      - labeled
+  issue_comment:
+    types:
+      - created
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "需要重放的 Issue 编号"
+        required: true
+        type: number
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  process-issue:
+    name: 处理 Issue
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'issues' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request == null &&
+       contains(github.event.comment.body, '/run-issue-workflow'))
+    steps:
+      - name: 解析 Issue 上下文
+        id: issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            let issue;
+            if (context.eventName === "workflow_dispatch") {
+              const issue_number = Number(core.getInput("issue_number"));
+              const response = await github.rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number,
+              });
+              issue = response.data;
+            } else {
+              issue = context.payload.issue;
+            }
+
+            const labels = (issue.labels || []).map((label) =>
+              typeof label === "string" ? label : label.name,
+            );
+            const issueType = labels.includes("bug")
+              ? "bug"
+              : labels.includes("enhancement")
+                ? "feature"
+                : "general";
+
+            core.setOutput("number", String(issue.number));
+            core.setOutput("title", issue.title);
+            core.setOutput("url", issue.html_url);
+            core.setOutput("labels", labels.join(", "));
+            core.setOutput("issue_type", issueType);
+
+      - name: 写入工作流评论
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = Number("${{ steps.issue.outputs.number }}");
+            const issueType = "${{ steps.issue.outputs.issue_type }}";
+            const title = "${{ steps.issue.outputs.title }}";
+            const labels = "${{ steps.issue.outputs.labels }}";
+            const trigger = context.eventName;
+
+            const body = [
+              "Issue 工作流已触发。",
+              "",
+              `- 触发方式：\`${trigger}\``,
+              `- Issue 类型：\`${issueType}\``,
+              `- 标题：${title}`,
+              `- 标签：${labels || "无"}`,
+              "",
+              "## 建议流程",
+              "",
+              "1. 先复现问题",
+              "2. 再补充方案",
+              "3. 再修改代码",
+              "4. 最后验证并提交",
+              "",
+              "## 测试要求",
+              "",
+              "```bash",
+              "./scripts/run_checks.sh",
+              "```",
+            ].join("\n");
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body,
+            });
+
+      - name: 添加已处理标签
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue_number = Number("${{ steps.issue.outputs.number }}");
+            const labelName = "workflow:processed";
+
+            try {
+              await github.rest.issues.getLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: labelName,
+              });
+            } catch (error) {
+              if (error.status === 404) {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: labelName,
+                  color: "0e8a16",
+                  description: "Issue 工作流已处理该问题",
+                });
+              } else {
+                throw error;
+              }
+            }
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+              labels: [labelName],
+            });
+
