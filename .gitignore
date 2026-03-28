@@ -4,3 +4,4 @@ dist/
 *.tsbuildinfo
 demo/node_modules/
 demo/dist/
+.worktrees/
