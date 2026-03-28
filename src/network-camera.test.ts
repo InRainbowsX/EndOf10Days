@@ -19,4 +19,18 @@ describe('getCharacterNetworkCamera', () => {
     expect(camera.offset.x).toBeCloseTo(161.6, 1);
     expect(camera.offset.y).toBeCloseTo(-95.8, 1);
   });
+
+  it('recomputes the offset when the viewport size changes', () => {
+    const positions = {
+      a: { x: 200, y: 240 },
+      b: { x: 760, y: 260 },
+      c: { x: 220, y: 760 },
+      d: { x: 760, y: 780 },
+    };
+
+    const compactCamera = getCharacterNetworkCamera(positions, { width: 1200, height: 800 });
+    const expandedCamera = getCharacterNetworkCamera(positions, { width: 1600, height: 1000 });
+
+    expect(expandedCamera.offset).not.toEqual(compactCamera.offset);
+  });
 });
