@@ -118,16 +118,17 @@ export function DoomRiver({ activeView, onNavigate }: DoomRiverProps) {
   const dragState = useRef<DragState | null>(null);
   const boardRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (activeView !== '人物馆') return;
+    if (activeView !== '人物馆') {
+      cameraInitializedRef.current = false;
+      return;
+    }
     const syncCamera = () => {
       if (!boardRef.current) return;
       const bounds = boardRef.current.getBoundingClientRect();
       const camera = getCharacterNetworkCamera(nodePositions, { width: bounds.width, height: bounds.height });
       setNetworkZoom(camera.zoom);
-      if (!cameraInitializedRef.current) {
-        setBoardOffset(camera.offset);
-        cameraInitializedRef.current = true;
-      }
+      setBoardOffset(camera.offset);
+      cameraInitializedRef.current = true;
     };
     syncCamera();
     const board = boardRef.current;
@@ -895,6 +896,7 @@ export function DoomRiver({ activeView, onNavigate }: DoomRiverProps) {
                 <div
                   className="museum-home__character-network-board"
                   aria-label="人物关系网络"
+                  data-testid="character-network-board"
                   ref={boardRef}
                   onPointerMove={handleBoardPointerMove}
                   onPointerDown={startBoardPan}
@@ -904,6 +906,7 @@ export function DoomRiver({ activeView, onNavigate }: DoomRiverProps) {
                 >
                   <div
                     className="museum-home__character-network-zoom"
+                    data-testid="character-network-zoom"
                     style={{
                       width: `${NETWORK_CANVAS.width}px`,
                       height: `${NETWORK_CANVAS.height}px`,
