@@ -79,4 +79,21 @@ describe('Event hall timeline', () => {
       expect(eventTitles.has(title)).toBe(true);
     });
   });
+
+  it('expands the chronology into more granular终焉 stages', () => {
+    const labels = timelineEvents.map((event) => event.label);
+
+    expect(labels).toEqual([
+      '旧世界裂口',
+      '空屋与开局',
+      '人鼠 / 人猪赌命期',
+      '临时同盟与伪同盟',
+      '回响与人蛇问答',
+      '天堂口与极道成形',
+      '白羊之路与对赌',
+      '双龙失稳与神兽压迫',
+      '列车与第二站',
+      '终局重写与生生不息',
+    ]);
+  });
 });
