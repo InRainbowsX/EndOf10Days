@@ -1131,7 +1131,7 @@ export const archiveNodes: ArchiveNode[] = [
       { label: '意义', value: '把生肖系统和权力系统焊在一起。' },
     ],
     tags: ['飞升', '对赌', '生肖'],
-    timeline: ['dragon-collapse'],
+    timeline: ['dragon-collapse', 'white-sheep-path'],
   },
   {
     id: 'final-train',
@@ -1146,7 +1146,7 @@ export const archiveNodes: ArchiveNode[] = [
       { label: '意义', value: '它是整部作品从生存博弈转向世界重构的关键门槛。' },
     ],
     tags: ['终局', '列车', '第二站'],
-    timeline: ['final-gate'],
+    timeline: ['final-gate-approach', 'final-gate'],
   },
   {
     id: 'giant-clock-event',
@@ -1160,7 +1160,7 @@ export const archiveNodes: ArchiveNode[] = [
       { label: '意义', value: '列车事件从交通节点升级为结构节点。' },
     ],
     tags: ['巨钟', '第二站', '空间跃迁'],
-    timeline: ['final-gate'],
+    timeline: ['final-gate-approach', 'final-gate'],
   },
   {
     id: 'middle-station',
@@ -1175,7 +1175,7 @@ export const archiveNodes: ArchiveNode[] = [
       { label: '意义', value: '它是终局空间叙事的重要中转点。' },
     ],
     tags: ['中间站', '过渡', '空间层'],
-    timeline: ['final-gate'],
+    timeline: ['final-gate-approach', 'final-gate'],
   },
   {
     id: 'how-win',
@@ -1189,7 +1189,7 @@ export const archiveNodes: ArchiveNode[] = [
       { label: '意义', value: '终局真正进入哲学层。' },
     ],
     tags: ['如何获胜', '终局', '重定义'],
-    timeline: ['final-gate'],
+    timeline: ['final-gate-approach', 'final-gate'],
   },
   {
     id: 'win-method',
@@ -1203,7 +1203,7 @@ export const archiveNodes: ArchiveNode[] = [
       { label: '意义', value: '它让终局的“怎么赢”与“赢了算什么”分离。' },
     ],
     tags: ['赢法', '策略', '终局'],
-    timeline: ['final-gate'],
+    timeline: ['final-gate-approach', 'final-gate'],
   },
   {
     id: 'dissociation',
@@ -1217,7 +1217,7 @@ export const archiveNodes: ArchiveNode[] = [
       { label: '意义', value: '为新世界构造腾出空间。' },
     ],
     tags: ['离析', '旧秩序', '拆解'],
-    timeline: ['final-gate'],
+    timeline: ['final-gate-approach', 'final-gate'],
   },
   {
     id: 'shengshengbuxi',
@@ -1391,7 +1391,7 @@ export const archiveNodes: ArchiveNode[] = [
       { label: '意义', value: '从阵营博弈转向秩序对抗。' },
     ],
     tags: ['白羊', '晋升', '顶层秩序'],
-    timeline: ['dragon-collapse'],
+    timeline: ['dragon-collapse', 'white-sheep-path'],
   },
   {
     id: 'tianma-principle',
@@ -1406,7 +1406,7 @@ export const archiveNodes: ArchiveNode[] = [
       { label: '意义', value: '它是事件馆与世界观馆之间的重要桥接节点。' },
     ],
     tags: ['天马', '高位规则', '治理机制'],
-    timeline: ['dragon-collapse'],
+    timeline: ['dragon-collapse', 'white-sheep-path'],
   },
   {
     id: 'beast-oppression',
@@ -1420,7 +1420,7 @@ export const archiveNodes: ArchiveNode[] = [
       { label: '意义', value: '把故事推向结构战争。' },
     ],
     tags: ['青龙', '天龙', '神兽'],
-    timeline: ['dragon-collapse'],
+    timeline: ['dragon-collapse', 'dragon-fracture'],
   },
   {
     id: 'qinglong-downfall',
@@ -1434,7 +1434,7 @@ export const archiveNodes: ArchiveNode[] = [
       { label: '意义', value: '从结构压迫迈向结构崩塌。' },
     ],
     tags: ['青龙', '失势', '秩序松动'],
-    timeline: ['dragon-collapse'],
+    timeline: ['dragon-collapse', 'dragon-fracture'],
   },
   {
     id: 'mandela-effect',
@@ -1449,7 +1449,7 @@ export const archiveNodes: ArchiveNode[] = [
       { label: '意义', value: '它是通往梦境现实与最终真相的前置事件。' },
     ],
     tags: ['曼德拉效应', '现实感', '记忆错位'],
-    timeline: ['dragon-collapse', 'final-gate'],
+    timeline: ['dragon-fracture', 'final-gate-approach'],
   },
   {
     id: 'tianlong-dissociation',
@@ -1463,7 +1463,7 @@ export const archiveNodes: ArchiveNode[] = [
       { label: '意义', value: '终局前最后一层主事件。' },
     ],
     tags: ['天龙', '离析', '清场'],
-    timeline: ['final-gate'],
+    timeline: ['dragon-fracture', 'final-gate-approach'],
   },
   {
     id: 'endgame-rewrite',
@@ -1969,39 +1969,57 @@ export const timelineEvents: TimelineEvent[] = [
   },
   {
     id: 'opening-bet',
-    label: '起始赌局',
+    label: '空屋与开局',
     phase: 'DAY 01',
-    detail: '第一间房的共犯结构开始成形，所有人都被强行拖进同一个局里，所谓信任第一次被改写成了生存手段。',
+    detail: '第一间房与说谎筛人把陌生人推入同一局面，信任第一次被改写成了生存手段。',
   },
   {
     id: 'false-alliance',
-    label: '伪同盟',
+    label: '人鼠 / 人猪赌命期',
     phase: 'DAY 02',
-    detail: '表面上的抱团开始出现裂缝，每个人都在算计谁会先背叛，谁又值得暂时站在身边。',
+    detail: '鼠类游戏、人猪赌命与早期概率型训练把恐惧、侥幸和站位一起推上台面。',
   },
   {
     id: 'echo-awakening',
-    label: '回响显影',
+    label: '临时同盟与伪同盟',
     phase: 'MID LOOP',
-    detail: '能力开始显现，记忆与人格裂口一起被拖到台前，人物第一次能带着历史继续往前走。',
+    detail: '临时合作先于信任出现，人物在多轮震荡中形成伪同盟与更稳定的共犯网络。',
   },
   {
     id: 'paradise-mouth',
-    label: '天堂口与极道',
+    label: '回响与人蛇问答',
     phase: 'LATE LOOP',
-    detail: '人物关系从个体协作升级为阵营博弈，组织、家人话术和反抗神话同时开始生长。',
+    detail: '回响显影、语义博弈与人蛇问答让能力、记忆和规则理解一起升级。',
   },
   {
     id: 'dragon-collapse',
-    label: '双龙秩序失稳',
+    label: '天堂口与极道成形',
     phase: 'ENDGAME',
-    detail: '神兽、天级和参与者之间的边界开始松动，故事从关卡叙事正式跃迁为结构战争。',
+    detail: '天堂口的组织化生存与极道的反抗组织开始成形，阵营博弈跃迁为结构战争。',
+  },
+  {
+    id: 'white-sheep-path',
+    label: '白羊之路与对赌',
+    phase: 'DAY 11',
+    detail: '白羊晋升、对赌合同与高位规则把层级跃迁制度化，胜负开始绑定命运。'
+  },
+  {
+    id: 'dragon-fracture',
+    label: '双龙失稳与神兽压迫',
+    phase: 'ENDGAME',
+    detail: '青龙、天龙与神兽体系的压迫逐渐失稳，终焉从关卡叙事跃迁为秩序崩塌。'
+  },
+  {
+    id: 'final-gate-approach',
+    label: '列车与第二站',
+    phase: 'DAY 11+',
+    detail: '列车、第二站与中间站把所有人物、事件与真相拖向终局重解释。'
   },
   {
     id: 'final-gate',
-    label: '第二站与新世界',
+    label: '终局重写与生生不息',
     phase: 'DAY 11+',
-    detail: '列车、第二站和新世界构造把所有人物、事件与真相一起拖进最后的重解释。'
+    detail: '胜利条件被重写，复活悖论被收束，整部作品的最终解释回到生生不息。'
   },
 ];
 
