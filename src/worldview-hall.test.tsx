@@ -30,4 +30,13 @@ describe('Worldview hall', () => {
     expect(hall).toHaveTextContent('权力分层');
     expect(hall).toHaveTextContent('终局回收');
   });
+
+  it('renders the worldview network without truncating the connections', () => {
+    render(<App initialView="世界观馆" />);
+
+    const hall = screen.getByTestId('world-hall');
+    const networkNodes = hall.querySelectorAll('.museum-home__world-network-node');
+
+    expect(networkNodes.length).toBeGreaterThan(10);
+  });
 });

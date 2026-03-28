@@ -542,7 +542,6 @@ export function DoomRiver({ activeView, onNavigate }: DoomRiverProps) {
         ['rule', 'truth', 'faction'].includes(targetType ?? '')
       );
     })
-    .slice(0, 10)
     .map((edge) => ({
       id: `${edge.source}-${edge.target}`,
       label: edge.label,
