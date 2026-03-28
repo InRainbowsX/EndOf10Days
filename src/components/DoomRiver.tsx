@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { NavigationItem } from '../App';
 import { archiveEdges, archiveNodes, characterEchoNames, flowCards, museumHalls, riverStages, timelineEvents } from '../archiveData';
-import { getCharacterHallGroups } from '../characterHall';
 
 type DoomRiverProps = {
   activeView: NavigationItem;
@@ -138,9 +137,6 @@ export function DoomRiver({ activeView, onNavigate }: DoomRiverProps) {
     return () => observer.disconnect();
   }, [activeView]);
   const characterNodes = archiveNodes.filter((node) => node.type === 'character');
-  const { mainBoardIds, collapsedIds } = getCharacterHallGroups(archiveNodes);
-  const mainCharacterNodes = characterNodes.filter((node) => mainBoardIds.includes(node.id));
-  const collapsedCharacterNodes = characterNodes.filter((node) => collapsedIds.includes(node.id));
   const eventNodes = archiveNodes.filter((node) => node.type === 'event');
   const ruleNodes = archiveNodes.filter((node) => node.type === 'rule');
   const factionNodes = archiveNodes.filter((node) => node.type === 'faction');
@@ -364,7 +360,7 @@ export function DoomRiver({ activeView, onNavigate }: DoomRiverProps) {
 
   const [nodePositions, setNodePositions] = useState<Record<string, Point>>(() => buildInitialNodePositions());
 
-  const characterNetworkNodes = mainCharacterNodes.map((character) => {
+  const characterNetworkNodes = characterNodes.map((character) => {
     const position = nodePositions[character.id] ?? toPoint(120, 120);
     return {
       character,
@@ -546,7 +542,6 @@ export function DoomRiver({ activeView, onNavigate }: DoomRiverProps) {
         ['rule', 'truth', 'faction'].includes(targetType ?? '')
       );
     })
-    .slice(0, 10)
     .map((edge) => ({
       id: `${edge.source}-${edge.target}`,
       label: edge.label,
@@ -1143,22 +1138,6 @@ export function DoomRiver({ activeView, onNavigate }: DoomRiverProps) {
                   </div>
                 </article>
               ))}
-            </section>
-
-            <section className="museum-home__collapsed-characters" aria-labelledby="collapsed-character-heading">
-              <div className="museum-home__section-heading museum-home__section-heading--compact">
-                <p className="eyebrow">MORE / COLLAPSED</p>
-                <h3 id="collapsed-character-heading">更多人物折叠层</h3>
-              </div>
-              <div className="museum-home__collapsed-characters-grid">
-                {collapsedCharacterNodes.map((character) => (
-                  <article key={character.id} className="museum-home__collapsed-character-card">
-                    <p className="museum-home__dossier-range">回响：{toEchoName(character.id)}</p>
-                    <h4>{character.title}</h4>
-                    <p>{character.summary}</p>
-                  </article>
-                ))}
-              </div>
             </section>
         </section>
       ) : null}
